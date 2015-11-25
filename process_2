@@ -1,0 +1,128 @@
+#include <stdio.h>
+
+int Y, X, N, Ans;
+int c[200][200];
+char m[200][200 + 1];
+
+void get_map(){
+	int i;
+
+	FILE *inn = fopen("MAP.TXT", "r");
+	fscanf(inn, "%d%d%d", &Y, &X, &N);
+	for (i = 0; i < Y; i++) fscanf(inn, "%s", m[i]);
+}
+
+void plus(int y, int x){
+	int i;
+	int d[8][2] = { 1, 1, 1, 0, 1, -1, 0, 1, 0, -1, -1, -1, -1, 0, -1, 1 };
+
+	for (i = 0; i < 8; i++){
+		if (y + d[i][0] < 0 || x + d[i][1] < 0) continue;
+		if (y + d[i][0] >= Y || x + d[i][1] >= X) continue;
+		if (m[y + d[i][0]][x + d[i][1]] == '*' || m[y + d[i][0]][x + d[i][1]] == 'A' || m[y + d[i][0]][x + d[i][1]] == 'B') continue;
+		c[y + d[i][0]][x + d[i][1]]++;
+	}
+}
+
+int dfs(int y, int x, int C){
+	int i, Cnt = 1;
+	int d[4][2] = { 1, 0, 0, 1, -1, 0, 0, -1 };
+
+	m[y][x] = 'a' + C, c[y][x] = -1;
+
+	for (i = 0; i < 4; i++){
+		if (y + d[i][0] < 0 || x + d[i][1] < 0) continue;
+		if (y + d[i][0] >= Y || x + d[i][1] >= X) continue;
+		if (c[y + d[i][0]][x + d[i][1]]) continue;
+		Cnt += dfs(y + d[i][0], x + d[i][1], C);
+	}
+
+	return Cnt;
+}
+
+int calc(int y, int x, int C){
+	int i, u, j, Cnt;
+	int d[8][2] = { 1, 1, 1, 0, 1, -1, 0, 1, 0, -1, -1, -1, -1, 0, -1, 1 };
+	char o = m[y][x];
+	bool v[200][200];
+
+	for (i = 0; i < Y; i++) for (u = 0; u < X; u++) v[i][u] = ((m[i][u] == 'A' || m[i][u] == 'B' || m[i][u] == 'a' || m[i][u] == 'b') ? true : false);
+
+	m[y][x] = 'a' + C;
+
+	if (o == '*'){
+		m[y][x] = 'A' + C;
+		return 4;
+	}
+	for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (m[i][u] == '*' || m[i][u] == 'A' || m[i][u] == 'B') plus(i, u);
+	if (c[y][x]) return 1;
+
+	Cnt = dfs(y, x, C);
+
+	for (i = 0; i < Y; i++){
+		for (u = 0; u < X; u++){
+			if (c[i][u] <= 0) continue;
+			for (j = 0; j < 8; j++){
+				if (i + d[j][0] < 0 || u + d[j][1] < 0) continue;
+				if (i + d[j][0] >= Y || u + d[j][1] >= X) continue;
+				if (c[i + d[j][0]][u + d[j][1]] == -1) break;
+			}
+			if (j<8 && !v[i][u]) m[i][u] = 'a' + C, Cnt++;
+		}
+	}
+
+	return Cnt;
+}
+
+void process(){
+	int i, u;
+	int c, y, x, a, b;
+	char p;
+
+	FILE *inn = fopen("SELECTION.TXT", "r");
+	FILE *out = fopen("RESULT.TXT", "w");
+
+	fscanf(inn, "%c%d%d%d", &p, &c, &y, &x);
+	y--, x--;
+
+	fscanf(inn, "%d%d", &a, &b);
+	if (y < 0 || x < 0 || y >= Y || x >= X) Ans = -1;
+	else if (m[y][x] == 'A' || m[y][x] == 'B' || m[y][x] == 'a' || m[y][x] == 'b') Ans = -1;
+	else if (c == 2){
+		Ans = 1;
+		if (p == 'A'){
+			for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (m[i][u] == '@') m[i][u] = '.';
+			if (m[y][x] == '.') m[y][x] = '@';
+		}
+		else{
+			for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (m[i][u] == '#') m[i][u] = '.';
+			if (m[y][x] == '.') m[y][x] = '#';
+		}
+	}
+	else if (((m[y][x] == '*' || m[y][x] == '@' || m[y][x] == '#') && c == 1) || (m[y][x] == '.' && c == 0)){
+		Ans = 1;
+		if (p == 'A') a += calc(y, x, 0);
+		else b += calc(y, x, 1);
+	}
+	else{
+		Ans = 2;
+	}
+
+	if (Ans == -1) fprintf(out, "-1");
+	else fprintf(out, "%d %d %d", Ans, a, b);
+}
+
+void output(){
+	int i, u;
+
+	FILE *out = fopen("MAP.TXT", "w");
+	fprintf(out, "%d %d %d\n", Y, X, N);
+	for (i = 0; i < Y; i++) fprintf(out, "%s\n", m[i]);
+}
+
+int main(){
+	get_map();
+	process();
+	output();
+	return 0;
+}
