@@ -67,9 +67,14 @@ int main(){
 			system("process.exe");
 			if (check()) break;
 		}
-
-
 	}
+
+	if (A == B) printf("Draw!");
+	else if (A>B) printf("A Wins!");
+	else if (A<B) printf("B Wins!");
+	
+	printf("Please any key to input");
+	scanf("%d", &i);
 
 	return 0;
 }
