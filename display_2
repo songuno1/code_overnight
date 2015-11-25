@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <windows.h>
+
+FILE *inn = fopen("MAP.TXT", "r");
+
+int Y, X, N;
+int M[200][200 + 1];
+char m[200][200 + 1], r[200][200 + 1];
+
+int main(){
+	int i, u, j;
+	int d[8][2] = { 1, 1, 1, 0, 1, -1, 0, 1, 0, -1, -1, -1, -1, 0, -1, 1 };
+
+	fscanf(inn, "%d%d%d", &Y, &X, &N);
+	for (i = 0; i < Y; i++) fscanf(inn, "%s", m[i]);
+
+	for (i = 0; i < Y; i++){
+		for (u = 0; u < X; u++){
+			if (m[i][u] == '*' || m[i][u] == 'A' || m[i][u] == 'B'){
+				for (j = 0; j < 8; j++){
+					if (i + d[j][0] < 0 || u + d[j][1] < 0) continue;
+					if (i + d[j][0] >= Y || u + d[j][1] >= X) continue;
+					M[i + d[j][0]][u + d[j][1]]++;
+				}
+			}
+		}
+	}
+
+	system("CLS");
+
+	printf("player A : \n");
+	for (i = 0; i < Y; i++){
+		for (u = 0; u < X; u++){
+			if (m[i][u] == '@') printf("@");
+			else if (m[i][u] == '#') printf(".");
+			else if (m[i][u] == 'A' || m[i][u] == 'B') printf("&");
+			else if (m[i][u] == 'a' || m[i][u] == 'b'){
+				printf("%c", '0' + M[i][u]);
+			}
+			else printf(".");
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+
+	printf("player B : \n");
+	for (i = 0; i < Y; i++){
+		for (u = 0; u < X; u++){
+			if (m[i][u] == '@') printf(".");
+			else if (m[i][u] == '#') printf("#");
+			else if (m[i][u] == 'A' || m[i][u] == 'B') printf("&");
+			else if (m[i][u] == 'a' || m[i][u] == 'b'){
+				printf("%c", '0' + M[i][u]);
+			}
+			else printf(".");
+		}
+		printf("\n");
+	}
+
+	return 0;
+}
