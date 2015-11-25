@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <Windows.h>
+
+int A, B;
+
+bool isEnd(){
+	int i, u;
+	int Y, X, N;
+	char m[200][200 + 1];
+
+	FILE *inn = fopen("MAP.TXT", "r");
+
+	fscanf(inn, "%d%d%d", &Y, &X, &N);
+	for (i = 0; i < Y; i++) fscanf(inn, "%s", m[i]);
+
+	for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (!(m[i][u] == 'A' || m[i][u] == 'B' || m[i][u] == 'a' || m[i][u] == 'b')) return false;
+	return true;
+}
+
+bool p = true;
+
+void make_decide(int y, int x, char c){
+	FILE *out = fopen("SELECTION.TXT", "w");
+
+	fprintf(out, "%c %d %d %d\n", ((p) ? 'A' : 'B'), ((c == 'Y') ? 1 : 0), y, x);
+	fprintf(out, "%d %d", A, B);
+
+	fclose(out);
+}
+
+bool check(){
+	int in;
+
+	FILE *inn = fopen("RESULT.TXT", "r");
+
+	fscanf(inn, "%d", &in);
+	if (in == -1) return false;
+
+	if (in == 2) p ^= true;
+	fscanf(inn, "%d%d", &A, &B);
+
+	return true;
+}
+
+
+int main(){
+	int i, u;
+	char c[2];
+
+	while (!isEnd()){
+		system("display.exe");
+		printf("SCORE A %d - %d B \n", A, B);
+		printf("%c's Turn! \n", (p) ? 'A' : 'B');
+
+		while (true){
+			printf("Y? ");
+			scanf("%d", &i);
+			printf("X? ");
+			scanf("%d", &u);
+			while (true){
+				printf("Mine?(Y/N) ");
+				scanf("%s", c);
+				if (c[0] == 'Y' || c[0] == 'N') break;
+			}
+
+			make_decide(i, u, c[0]);
+			system("process.exe");
+			if (check()) break;
+		}
+
+
+	}
+
+	return 0;
+}
