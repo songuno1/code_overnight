@@ -32,8 +32,7 @@ int main(){
 		for (u = 0; u < X; u++){
 			if (m[i][u] == 'A' || m[i][u] == 'B') printf("&");
 			else if (m[i][u] == 'a' || m[i][u] == 'b'){
-				if (M[i][u]) printf("%c", '0' + M[i][u]);
-				else printf("+");
+				printf("%c", '0' + M[i][u]);
 			}
 			else printf(".");
 		}
