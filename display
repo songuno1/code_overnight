@@ -5,11 +5,11 @@ FILE *inn = fopen("MAP.TXT", "r");
 
 int Y, X, N;
 int M[200][200 + 1];
-char m[200][200 + 1], r[200][200+1];
+char m[200][200 + 1], r[200][200 + 1];
 
 int main(){
 	int i, u, j;
-	int d[4][2] = { 1, 0, 0, 1, -1, 0, 0, -1 };
+	int d[8][2] = { 1, 1, 1, 0, 1, -1, 0, 1, 0, -1, -1, -1, -1, 0, -1, 1 };
 
 	fscanf(inn, "%d%d%d", &Y, &X, &N);
 	for (i = 0; i < Y; i++) fscanf(inn, "%s", m[i]);
@@ -17,7 +17,7 @@ int main(){
 	for (i = 0; i < Y; i++){
 		for (u = 0; u < X; u++){
 			if (m[i][u] == '*' || m[i][u] == 'A' || m[i][u] == 'B'){
-				for (j = 0; j < 4; j++){
+				for (j = 0; j < 8; j++){
 					if (i + d[j][0] < 0 || u + d[j][1] < 0) continue;
 					if (i + d[j][0] >= Y || u + d[j][1] >= X) continue;
 					M[i + d[j][0]][u + d[j][1]]++;
