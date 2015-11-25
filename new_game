@@ -3,6 +3,7 @@ Upgrade version of
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 FILE *inn = fopen("OPTION.TXT", "r");
 FILE *out = fopen("MAP.TXT", "w");
@@ -12,6 +13,8 @@ bool m[200][200];
 
 int main(){
 	int i, u, y, x;
+
+	srand((unsigned)time(NULL));
 
 	fscanf(inn, "%d%d%d", &Y, &X, &N);
 	fprintf(out, "%d %d %d\n", Y, X, N);
