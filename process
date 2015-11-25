@@ -28,7 +28,7 @@ int dfs(int y, int x, int C){
 	int i, Cnt = 1;
 	int d[4][2] = { 1, 0, 0, 1, -1, 0, 0, -1 };
 
-	m[y][x] = 'A' + C, c[y][x] = -1;
+	m[y][x] = 'a' + C, c[y][x] = -1;
 
 	for (i = 0; i < 4; i++){
 		if (y + d[i][0] < 0 || x + d[i][1] < 0) continue;
@@ -45,9 +45,12 @@ int calc(int y, int x, int C){
 	int d[4][2] = { 1, 0, 0, 1, -1, 0, 0, -1 };
 	char o = m[y][x];
 
-	m[y][x] = 'A' + C;
+	m[y][x] = 'a' + C;
 
-	if (o == '*') return 4;
+	if (o == '*'){
+		m[y][x] = 'A' + C;
+		return 4;
+	}
 	for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (m[i][u] == '*') plus(i, u);
 	if (c[y][x]) return 1;
 
@@ -62,9 +65,11 @@ int calc(int y, int x, int C){
 					break;
 				}
 			}
-			if (j<4) m[i][u] = 'A' + C, Cnt++;
+			if (j<4) m[i][u] = 'a' + C, Cnt++;
 		}
 	}
+
+	return Cnt;
 }
 
 void process(){
