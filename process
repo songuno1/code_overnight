@@ -42,7 +42,7 @@ int dfs(int y, int x, int C){
 
 int calc(int y, int x, int C){
 	int i, u, j, Cnt;
-	int d[4][2] = { 1, 0, 0, 1, -1, 0, 0, -1 };
+	int d[8][2] = { 1, 1, 1, 0, 1, -1, 0, 1, 0, -1, -1, -1, -1, 0, -1, 1 };
 	char o = m[y][x];
 
 	m[y][x] = 'a' + C;
@@ -51,7 +51,7 @@ int calc(int y, int x, int C){
 		m[y][x] = 'A' + C;
 		return 4;
 	}
-	for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (m[i][u] == '*' || m[i][u]=='A' || m[i][u]=='B') plus(i, u);
+	for (i = 0; i < Y; i++) for (u = 0; u < X; u++) if (m[i][u] == '*' || m[i][u] == 'A' || m[i][u] == 'B') plus(i, u);
 	if (c[y][x]) return 1;
 
 	Cnt = dfs(y, x, C);
@@ -59,12 +59,12 @@ int calc(int y, int x, int C){
 	for (i = 0; i < Y; i++){
 		for (u = 0; u < X; u++){
 			if (c[i][u] <= 0) continue;
-			for (j = 0; j < 4; j++){
+			for (j = 0; j < 8; j++){
 				if (i + d[j][0] < 0 || u + d[j][1] < 0) continue;
 				if (i + d[j][0] >= Y || u + d[j][1] >= X) continue;
 				if (c[i + d[j][0]][u + d[j][1]] == -1) break;
 			}
-			if (j<4) m[i][u] = 'a' + C, Cnt++;
+			if (j<8) m[i][u] = 'a' + C, Cnt++;
 		}
 	}
 
